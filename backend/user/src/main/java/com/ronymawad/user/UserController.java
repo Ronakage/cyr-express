@@ -49,18 +49,18 @@ public class UserController {
         return userService.getUserByID(id);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_SHOP_OWNER')")
+    @PreAuthorize("hasAuthority('ROLE_STAFF')")
     @GetMapping("/firstName/{firstName}")
     public List<UserModel> getUserByFirstName(@PathVariable String firstName){
         return userService.getUserByFirstName(firstName);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_DRIVER')")
+    @PreAuthorize("hasAuthority('ROLE_STAFF')")
     @GetMapping("/lastName/{lastName}")
     public List<UserModel> getUserByLastName(@PathVariable String lastName){
         return userService.getUserByLastName(lastName);
     }
-    @PreAuthorize("hasAuthority('ROLE_CLIENT')")
+    @PreAuthorize("hasAuthority('ROLE_STAFF')")
     @GetMapping("/email/{email}")
     public UserModel getUserByEmail(@PathVariable String email){
         try {
