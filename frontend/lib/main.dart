@@ -3,35 +3,31 @@ import 'package:google_fonts/google_fonts.dart';
 import 'utils/CustomColors.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const CyrExpressApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class CyrExpressApp extends StatelessWidget {
+  const CyrExpressApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Cyr Express',
-      // theme: ThemeData(
-      //   primarySwatch: Color.fromARGB(255, 87, 62, 213),
-      //   appBarTheme: Color.fromARGB(255, 87, 62, 213),
-      // ),
-      home: MyHomePage(title: 'Cyr Express'),
+      home: AuthentactionPage(title: 'Cyr Express'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class AuthentactionPage extends StatefulWidget {
+  const AuthentactionPage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<AuthentactionPage> createState() => _AuthentactionPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _AuthentactionPageState extends State<AuthentactionPage> {
   int _counter = 0;
 
   void _login() {
