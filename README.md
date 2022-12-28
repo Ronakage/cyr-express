@@ -1,2 +1,2 @@
 # cyr-express
-Delivery Application.
+Delivery application.
