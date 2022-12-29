@@ -27,6 +27,7 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.OK).body("User created with " + request.email());
     }
+    //TODO : Check email + password on login
     @PostMapping("/signin")
     public ResponseEntity<Object> loginUser(@RequestBody UserLoginRequest request){
         try {
@@ -49,17 +50,20 @@ public class UserController {
         return userService.getUserByID(id);
     }
 
+    //--------------------------- User Name CRUD Operations ---------------------------
     @PreAuthorize("hasAuthority('ROLE_STAFF')")
     @GetMapping("/firstName/{firstName}")
     public List<UserModel> getUserByFirstName(@PathVariable String firstName){
         return userService.getUserByFirstName(firstName);
     }
 
+
     @PreAuthorize("hasAuthority('ROLE_STAFF')")
     @GetMapping("/lastName/{lastName}")
     public List<UserModel> getUserByLastName(@PathVariable String lastName){
         return userService.getUserByLastName(lastName);
     }
+    //--------------------------- User E-mail CRUD Operations ---------------------------
     @PreAuthorize("hasAuthority('ROLE_STAFF')")
     @GetMapping("/email/{email}")
     public UserModel getUserByEmail(@PathVariable String email){
@@ -70,10 +74,11 @@ public class UserController {
             return new UserModel(); //TODO : return status code
         }
     }
-
+    @PreAuthorize("hasAuthority('ROLE_CLIENT')")
     @PatchMapping
     public void patchUserEmail(String id, String newEmail){
         UserModel user = userService.getUserByID(id);
         user.setEmail(newEmail);
     }
+
 }
