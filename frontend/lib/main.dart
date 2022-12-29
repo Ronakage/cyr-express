@@ -67,10 +67,11 @@ class _AuthentactionPageState extends State<AuthentactionPage> {
                 maxLines: 1,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
-                    borderSide: BorderSide(color: CustomColors.primaryColor)
+                    borderSide: BorderSide(color: CustomColors.primaryColor),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: CustomColors.primaryColor)
+                    borderSide: BorderSide(color: CustomColors.primaryColor),
+                    borderRadius: BorderRadius.all(Radius.circular(100))
                   ),
                   hintText: 'E-mail',
                 )
@@ -87,7 +88,8 @@ class _AuthentactionPageState extends State<AuthentactionPage> {
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: CustomColors.primaryColor)
+                    borderSide: BorderSide(color: CustomColors.primaryColor),
+                    borderRadius: BorderRadius.all(Radius.circular(100))
                   ),
                   hintText: 'Password',
                 )
@@ -100,7 +102,7 @@ class _AuthentactionPageState extends State<AuthentactionPage> {
                 backgroundColor: CustomColors.primaryColor,
                 elevation: 3,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
+                    borderRadius: BorderRadius.circular(50.0),
                 ),
                 minimumSize: const Size(200, 70), 
               ),
@@ -108,9 +110,9 @@ class _AuthentactionPageState extends State<AuthentactionPage> {
               child: const Text("Login", style: TextStyle(fontSize: 20),),
             ),
             const SizedBox(height: 15),
-            const SizedBox(width: 100 ,child: Divider(color: Colors.grey)),
+            const SizedBox(height: 50 ,width: 100 ,child: Divider(color: Colors.grey)),
             const Text("You don't have an account yet? Register now!"),
-            const SizedBox(height: 15),
+            const SizedBox(height: 50),
             //Register Button
             ElevatedButton(
               style: ElevatedButton.styleFrom(
