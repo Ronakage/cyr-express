@@ -73,7 +73,7 @@ class _AuthentactionPageState extends State<AuthentactionPage> {
             //Breaking Line
             const SizedBox(
                 height: 50, width: 100, child: Divider(color: Colors.grey)),
-            const Text("You don't have an account yet? Register now!"),
+            const Text("Don't have an account yet? Register now!"),
             const SizedBox(height: 50),
             //Register Button
             AuthPageRegisterButton(),
@@ -134,11 +134,12 @@ class AuthPagePasswordWidget extends StatelessWidget {
             obscureText: true,
             maxLines: 1,
             decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: CustomColors.primaryColor),
-                  borderRadius: BorderRadius.all(Radius.circular(100))),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: CustomColors.primaryColor),
+                  borderRadius: BorderRadius.all(Radius.circular(100))), 
+              focusedBorder:OutlineInputBorder(
+                borderSide: BorderSide(color: CustomColors.primaryColor),
+              ),
               hintText: 'Password',
             )),
       ),
@@ -163,11 +164,10 @@ class AuthPageEmailInputWidget extends StatelessWidget {
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderSide: BorderSide(color: CustomColors.primaryColor),
+                  borderRadius: BorderRadius.all(Radius.circular(100))), 
+              focusedBorder:OutlineInputBorder(
+                borderSide: BorderSide(color: CustomColors.primaryColor),
               ),
-              focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: CustomColors.primaryColor),
-                  borderRadius: BorderRadius.all(Radius.circular(100))),
               hintText: 'E-mail',
             )),
       ),
