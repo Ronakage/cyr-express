@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'utils/CustomColors.dart';
@@ -44,93 +45,163 @@ class _AuthentactionPageState extends State<AuthentactionPage> {
 
   @override
   Widget build(BuildContext context) {
+    /*
+    TODO :
+    1 - replace sized boxes with padding
+    2 -  make the view responsive
+    2 - use api calls for login and register
+    3 - create a register view
+    4 - pass user model to navigator
+    5 - have other views to navigate to (admin, staff, shop, driver, client)
+    */
     return Scaffold(
       body: Center(
-        child:
-        SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              //Company name
-              Text("Cyr Express", 
-                  style: GoogleFonts.poppins(
-                  color: const Color.fromARGB(255, 59, 59, 61),
-                  fontSize: 75,
-                  fontWeight: FontWeight.w900,
-                ), 
+          child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            //Company name
+            const AuthPageTitleWidget(),
+            //E-mail Text Field
+            const AuthPageEmailInputWidget(),
+            //Password Text Field
+            const AuthPagePasswordWidget(),
+            const SizedBox(height: 30),
+            //Login Button
+            AuthPageLoginButton(),
+            const SizedBox(height: 15),
+            //Breaking Line
+            const SizedBox(
+                height: 50, width: 100, child: Divider(color: Colors.grey)),
+            const Text("You don't have an account yet? Register now!"),
+            const SizedBox(height: 50),
+            //Register Button
+            AuthPageRegisterButton(),
+          ],
+        ),
+      )),
+    );
+  }
+
+ElevatedButton AuthPageRegisterButton() {
+    return ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: CustomColors.primaryColor,
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0)),
+              minimumSize: const Size(200, 50),
+            ),
+            onPressed: _register,
+            child: const Text(
+              "Register",
+              style: TextStyle(fontSize: 20),
+            ),
+          );
+  }
+
+ElevatedButton AuthPageLoginButton() {
+    return ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: CustomColors.primaryColor,
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50.0),
               ),
-              const SizedBox(height: 50),
-              //E-mail Text Field
-              const SizedBox(
-                width: 500,
-                child: TextField(
-                  keyboardType: TextInputType.emailAddress,
-                  maxLines: 1,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: CustomColors.primaryColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: CustomColors.primaryColor),
-                      borderRadius: BorderRadius.all(Radius.circular(100))
-                    ),
-                    hintText: 'E-mail',
-                  )
-                ),
-              ),
-              const SizedBox(height: 10),
-              //Password Text Field
-              const SizedBox(
-                width: 500,
-                child: TextField(
-                  keyboardType: TextInputType.text,
-                  obscureText: true,
-                  maxLines: 1,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: CustomColors.primaryColor),
-                      borderRadius: BorderRadius.all(Radius.circular(100))
-                    ),
-                    hintText: 'Password',
-                  )
-                ),
-              ),
-              const SizedBox(height: 50),
-              //Login Button
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: CustomColors.primaryColor,
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50.0),
-                  ),
-                  minimumSize: const Size(200, 70), 
-                ),
-                onPressed: _login,
-                child: const Text("Login", style: TextStyle(fontSize: 20),),
-              ),
-              const SizedBox(height: 15),
-              const SizedBox(height: 50 ,width: 100 ,child: Divider(color: Colors.grey)),
-              const Text("You don't have an account yet? Register now!"),
-              const SizedBox(height: 50),
-              //Register Button
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: CustomColors.primaryColor,
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0)
-                  ),
-                  minimumSize: const Size(200, 50), 
-                ),
-                onPressed: _register,
-                child: const Text("Register", style: TextStyle(fontSize: 20),),
-              ),
-            ],
-          ),
-        )  
+              minimumSize: const Size(200, 70),
+            ),
+            onPressed: _login,
+            child: const Text(
+              "Login",
+              style: TextStyle(fontSize: 20),
+            ),
+          );
+  }}
+
+class AuthPagePasswordWidget extends StatelessWidget {
+  const AuthPagePasswordWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.fromLTRB(0,15,0,25),
+      child: SizedBox(
+        width: 400,
+        child: TextField(
+            keyboardType: TextInputType.text,
+            obscureText: true,
+            maxLines: 1,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: CustomColors.primaryColor),
+                  borderRadius: BorderRadius.all(Radius.circular(100))),
+              hintText: 'Password',
+            )),
       ),
     );
   }
 }
+
+class AuthPageEmailInputWidget extends StatelessWidget {
+  const AuthPageEmailInputWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.fromLTRB(0,25,0,15),
+      child: SizedBox(
+        width: 400,
+        child: TextField(
+            keyboardType: TextInputType.emailAddress,
+            maxLines: 1,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: CustomColors.primaryColor),
+              ),
+              focusedBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: CustomColors.primaryColor),
+                  borderRadius: BorderRadius.all(Radius.circular(100))),
+              hintText: 'E-mail',
+            )),
+      ),
+    );
+  }
+}
+
+class AuthPageTitleWidget extends StatelessWidget {
+  const AuthPageTitleWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTextStyle(
+      style: GoogleFonts.poppins(
+        fontSize: 90,
+        fontWeight: FontWeight.w800,
+        fontStyle: FontStyle.italic,
+
+      ),
+      child: SizedBox(
+        width: 400,
+        child: Center(
+          child: TextLiquidFill(
+            text: 'Cyr Express',
+            waveColor: CustomColors.primaryColor,
+            boxBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            textStyle: const TextStyle(),
+            boxHeight: 400.0,
+          ),
+        ),
+      )
+    );
+  }
+}
+
