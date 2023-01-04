@@ -46,3 +46,4 @@ backend/.idea/
 .idea/misc.xml
 .idea/modules.xml
 .idea/vcs.xml
+frontend/lib/api/urls.dart

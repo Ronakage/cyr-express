@@ -1,5 +1,6 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/api/delivery.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'utils/CustomColors.dart';
 
@@ -77,10 +78,35 @@ class _AuthentactionPageState extends State<AuthentactionPage> {
             const SizedBox(height: 50),
             //Register Button
             AuthPageRegisterButton(),
+            const SizedBox(height: 50),
+            AuthPageDeliveryButton(),
           ],
         ),
       )),
     );
+  }
+
+
+ElevatedButton AuthPageDeliveryButton() {
+    return ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: CustomColors.primaryColor,
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0)),
+              minimumSize: const Size(200, 50),
+            ),
+            onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DeliveryPage()),
+                );
+            },
+            child: const Text(
+              "Go to Delivery Page",
+              style: TextStyle(fontSize: 20),
+            ),
+          );
   }
 
 ElevatedButton AuthPageRegisterButton() {
