@@ -39,6 +39,7 @@ dependencies:
   google_fonts: ^3.0.1
   animated_text_kit: ^4.2.2 #For text animations
   stomp_dart_client: ^0.4.4 #For websocket and stomp protocol
+  location: ^4.4.0 #For location tracking
 
 dev_dependencies:
   flutter_test:
