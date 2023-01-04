@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 public class LocationService {
     private SimpMessagingTemplate messagingTemplate;
 
-    public void notifyFrontend(final String message){
-        ResponseMessage response = new ResponseMessage(message);
+    public void notifyFrontend(final Object message){
+        //ResponseMessage response = new ResponseMessage(message);
         messagingTemplate.convertAndSend("/topic/locations", message);
     }
 }
