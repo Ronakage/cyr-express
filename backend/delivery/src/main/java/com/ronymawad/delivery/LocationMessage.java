@@ -20,6 +20,5 @@ public class LocationMessage {
         map.put("latitude", latitude);
         map.put("longitude", longitude);
         return map;
-        //return String.valueOf(latitude) + "/" +  String.valueOf(longitude);
     }
 }

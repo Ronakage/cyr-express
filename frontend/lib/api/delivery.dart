@@ -52,7 +52,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
     StompClient client = StompClient(
       config: StompConfig.SockJS(
         url: Urls.websocketDeliveryConnectionURL,
-        onConnect: onConnect,
+        onConnect: onConnectToDelivery,
         //Display error
         onStompError: (error) => print(error.toString()),
       ),
@@ -61,7 +61,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
     return client;
   }
 
-  void onConnect(StompFrame connectFrame) {
+  void onConnectToDelivery(StompFrame connectFrame) {
     client?.subscribe(
         destination: Urls.websocketDeliverySubscribtionURL,
         headers: {},
@@ -71,19 +71,23 @@ class _DeliveryPageState extends State<DeliveryPage> {
             items.add(locationObject);
           });
         });
+    print("STOMP CLIENT SUBSCRIBED TO : " +
+        Urls.websocketDeliverySubscribtionURL);
   }
 
-  void onSend(LocationData currentLocation) {
+  void onSendToDelivery(LocationData currentLocation) {
+    var locationObject = json.encode({
+      'name': 'tom',
+      'latitude': currentLocation.latitude,
+      'longitude': currentLocation.longitude
+    });
     client?.send(
-        destination: Urls.websocketDeliverySendURL,
-        body: json.encode({
-          'name': 'tom',
-          'latitude': currentLocation.latitude,
-          'longitude': currentLocation.longitude
-        }),
-        headers: {});
+      destination: Urls.websocketDeliverySendURL,
+      body: locationObject,
+      headers: {},
+    );
     setState(() {
-      items.add(currentLocation.toString());
+      items.add(locationObject);
     });
   }
 
@@ -112,12 +116,12 @@ class _DeliveryPageState extends State<DeliveryPage> {
 
     locationData = await location.getLocation();
 
-    onSend(locationData);
+    print(locationData);
 
     location.enableBackgroundMode(enable: true);
 
     location.onLocationChanged.listen((LocationData currentLocation) {
-      onSend(currentLocation);
+      onSendToDelivery(currentLocation);
     });
   }
 }
