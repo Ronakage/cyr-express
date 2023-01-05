@@ -16,7 +16,9 @@ class DeliveryPage extends StatefulWidget {
 
 class _DeliveryPageState extends State<DeliveryPage> {
   StompClient? client;
+  
   List<String> items = <String>[];
+  String msg = "No items";
 
   @override
   void initState() {
@@ -31,6 +33,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
     TODO :
     1 - Have error pop-ups for the websocket connection
     2 - use hashmaps to track people
+    3 - fix type conversion errors
     */
     return Scaffold(
       body: Center(
@@ -43,7 +46,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
                   );
                 },
               )
-            : const Text("No items"),
+            : Text(msg),
       ),
     );
   }
@@ -53,6 +56,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
       config: StompConfig.SockJS(
         url: Urls.websocketDeliveryConnectionURL,
         onConnect: onConnectToDelivery,
+        onWebSocketError: (error) => print(error.toString()),
         //Display error
         onStompError: (error) => print(error.toString()),
       ),
@@ -68,11 +72,9 @@ class _DeliveryPageState extends State<DeliveryPage> {
         callback: (frame) {
           setState(() {
             var locationObject = jsonDecode(frame.body!);
-            items.add(locationObject);
+            items.add(frame.body!);
           });
         });
-    print("STOMP CLIENT SUBSCRIBED TO : " +
-        Urls.websocketDeliverySubscribtionURL);
   }
 
   void onSendToDelivery(LocationData currentLocation) {
@@ -114,11 +116,9 @@ class _DeliveryPageState extends State<DeliveryPage> {
       }
     }
 
-    locationData = await location.getLocation();
-
-    print(locationData);
-
     location.enableBackgroundMode(enable: true);
+
+    locationData = await location.getLocation();
 
     location.onLocationChanged.listen((LocationData currentLocation) {
       onSendToDelivery(currentLocation);
