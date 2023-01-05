@@ -56,93 +56,93 @@ class _AuthentactionPageState extends State<AuthentactionPage> {
     5 - have other views to navigate to (admin, staff, shop, driver, client)
     */
     return Scaffold(
-      body: Center(
-          child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            //Company name
-            const AuthPageTitleWidget(),
-            //E-mail Text Field
-            const AuthPageEmailInputWidget(),
-            //Password Text Field
-            const AuthPagePasswordWidget(),
-            const SizedBox(height: 30),
-            //Login Button
-            AuthPageLoginButton(),
-            const SizedBox(height: 15),
-            //Breaking Line
-            const SizedBox(
-                height: 50, width: 100, child: Divider(color: Colors.grey)),
-            const Text("Don't have an account yet? Register now!"),
-            const SizedBox(height: 50),
-            //Register Button
-            AuthPageRegisterButton(),
-            const SizedBox(height: 50),
-            AuthPageDeliveryButton(),
-          ],
-        ),
-      )),
+      body: SafeArea(
+        child: Center(
+            child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              //Company name
+              const AuthPageTitleWidget(),
+              //E-mail Text Field
+              const AuthPageEmailInputWidget(),
+              //Password Text Field
+              const AuthPagePasswordWidget(),
+              const SizedBox(height: 30),
+              //Login Button
+              AuthPageLoginButton(),
+              const SizedBox(height: 15),
+              //Breaking Line
+              const SizedBox(
+                  height: 50, width: 100, child: Divider(color: Colors.grey)),
+              const Text("Don't have an account yet? Register now!"),
+              const SizedBox(height: 50),
+              //Register Button
+              AuthPageRegisterButton(),
+              const SizedBox(height: 50),
+              AuthPageDeliveryButton(),
+            ],
+          ),
+        )),
+      ),
     );
   }
 
-
-ElevatedButton AuthPageDeliveryButton() {
+  ElevatedButton AuthPageDeliveryButton() {
     return ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: CustomColors.primaryColor,
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.0)),
-              minimumSize: const Size(200, 50),
-            ),
-            onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => DeliveryPage()),
-                );
-            },
-            child: const Text(
-              "Go to Delivery Page",
-              style: TextStyle(fontSize: 20),
-            ),
-          );
+      style: ElevatedButton.styleFrom(
+        backgroundColor: CustomColors.primaryColor,
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+        minimumSize: const Size(200, 50),
+      ),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => DeliveryPage()),
+        );
+      },
+      child: const Text(
+        "Go to Delivery Page",
+        style: TextStyle(fontSize: 20),
+      ),
+    );
   }
 
-ElevatedButton AuthPageRegisterButton() {
+  ElevatedButton AuthPageRegisterButton() {
     return ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: CustomColors.primaryColor,
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.0)),
-              minimumSize: const Size(200, 50),
-            ),
-            onPressed: _register,
-            child: const Text(
-              "Register",
-              style: TextStyle(fontSize: 20),
-            ),
-          );
+      style: ElevatedButton.styleFrom(
+        backgroundColor: CustomColors.primaryColor,
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+        minimumSize: const Size(200, 50),
+      ),
+      onPressed: _register,
+      child: const Text(
+        "Register",
+        style: TextStyle(fontSize: 20),
+      ),
+    );
   }
 
-ElevatedButton AuthPageLoginButton() {
+  ElevatedButton AuthPageLoginButton() {
     return ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: CustomColors.primaryColor,
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50.0),
-              ),
-              minimumSize: const Size(200, 70),
-            ),
-            onPressed: _login,
-            child: const Text(
-              "Login",
-              style: TextStyle(fontSize: 20),
-            ),
-          );
-  }}
+      style: ElevatedButton.styleFrom(
+        backgroundColor: CustomColors.primaryColor,
+        elevation: 3,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50.0),
+        ),
+        minimumSize: const Size(200, 70),
+      ),
+      onPressed: _login,
+      child: const Text(
+        "Login",
+        style: TextStyle(fontSize: 20),
+      ),
+    );
+  }
+}
 
 class AuthPagePasswordWidget extends StatelessWidget {
   const AuthPagePasswordWidget({
@@ -152,7 +152,7 @@ class AuthPagePasswordWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Padding(
-      padding: EdgeInsets.fromLTRB(0,15,0,25),
+      padding: EdgeInsets.fromLTRB(0, 15, 0, 25),
       child: SizedBox(
         width: 400,
         child: TextField(
@@ -161,9 +161,9 @@ class AuthPagePasswordWidget extends StatelessWidget {
             maxLines: 1,
             decoration: InputDecoration(
               border: OutlineInputBorder(
-                borderSide: BorderSide(color: CustomColors.primaryColor),
-                  borderRadius: BorderRadius.all(Radius.circular(100))), 
-              focusedBorder:OutlineInputBorder(
+                  borderSide: BorderSide(color: CustomColors.primaryColor),
+                  borderRadius: BorderRadius.all(Radius.circular(100))),
+              focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: CustomColors.primaryColor),
               ),
               hintText: 'Password',
@@ -181,7 +181,7 @@ class AuthPageEmailInputWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Padding(
-      padding: EdgeInsets.fromLTRB(0,25,0,15),
+      padding: EdgeInsets.fromLTRB(0, 25, 0, 15),
       child: SizedBox(
         width: 400,
         child: TextField(
@@ -189,9 +189,9 @@ class AuthPageEmailInputWidget extends StatelessWidget {
             maxLines: 1,
             decoration: InputDecoration(
               border: OutlineInputBorder(
-                borderSide: BorderSide(color: CustomColors.primaryColor),
-                  borderRadius: BorderRadius.all(Radius.circular(100))), 
-              focusedBorder:OutlineInputBorder(
+                  borderSide: BorderSide(color: CustomColors.primaryColor),
+                  borderRadius: BorderRadius.all(Radius.circular(100))),
+              focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: CustomColors.primaryColor),
               ),
               hintText: 'E-mail',
@@ -209,25 +209,22 @@ class AuthPageTitleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle(
-      style: GoogleFonts.poppins(
-        fontSize: 90,
-        fontWeight: FontWeight.w800,
-        fontStyle: FontStyle.italic,
-
-      ),
-      child: SizedBox(
-        width: 400,
-        child: Center(
-          child: TextLiquidFill(
-            text: 'Cyr Express',
-            waveColor: CustomColors.primaryColor,
-            boxBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            textStyle: const TextStyle(),
-            boxHeight: 400.0,
-          ),
+        style: GoogleFonts.poppins(
+          fontSize: 50,
+          fontWeight: FontWeight.w800,
+          fontStyle: FontStyle.italic,
         ),
-      )
-    );
+        child: SizedBox(
+          width: 400,
+          child: Center(
+            child: TextLiquidFill(
+              text: 'Cyr Express',
+              waveColor: CustomColors.primaryColor,
+              boxBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              textStyle: const TextStyle(),
+              boxHeight: 100.0,
+            ),
+          ),
+        ));
   }
 }
-

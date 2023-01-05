@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
 import 'package:frontend/api/urls.dart';
 import 'package:location/location.dart';
@@ -16,7 +18,7 @@ class DeliveryPage extends StatefulWidget {
 
 class _DeliveryPageState extends State<DeliveryPage> {
   StompClient? client;
-  
+
   List<String> items = <String>[];
   String msg = "No items";
 
@@ -36,17 +38,19 @@ class _DeliveryPageState extends State<DeliveryPage> {
     3 - fix type conversion errors
     */
     return Scaffold(
-      body: Center(
-        child: items.isNotEmpty
-            ? ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(items[index]),
-                  );
-                },
-              )
-            : Text(msg),
+      body: SafeArea(
+        child: Center(
+          child: items.isNotEmpty
+              ? ListView.builder(
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(items[index]),
+                    );
+                  },
+                )
+              : Text(msg),
+        ),
       ),
     );
   }
@@ -71,26 +75,24 @@ class _DeliveryPageState extends State<DeliveryPage> {
         headers: {},
         callback: (frame) {
           setState(() {
-            var locationObject = jsonDecode(frame.body!);
-            items.add(frame.body!);
+            String locationObject = json.encode(frame.body!);
+            items.add(locationObject);
+            print(locationObject);
           });
         });
   }
 
   void onSendToDelivery(LocationData currentLocation) {
-    var locationObject = json.encode({
-      'name': 'tom',
+    var locationObject = {
+      'name': 'johnson',
       'latitude': currentLocation.latitude,
       'longitude': currentLocation.longitude
-    });
-    client?.send(
-      destination: Urls.websocketDeliverySendURL,
-      body: locationObject,
-      headers: {},
+    };
+    http.post(
+      Uri.parse(Urls.websocketDeliverySendURL),
+      headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8'},
+      body: json.encode(locationObject),
     );
-    setState(() {
-      items.add(locationObject);
-    });
   }
 
   void initLocationTracking() async {
