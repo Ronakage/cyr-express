@@ -20,6 +20,9 @@ class DeliveryPage extends StatefulWidget {
 
 class _DeliveryPageState extends State<DeliveryPage> {
   StompClient? client;
+  LocationData? myLocation;
+  final Completer<GoogleMapController> mapController =
+      Completer<GoogleMapController>();
 
   @override
   void initState() {
@@ -45,14 +48,25 @@ class _DeliveryPageState extends State<DeliveryPage> {
     */
     return Scaffold(
       body: Stack(
-        children: const [
-          MapPage(),
+        children: [
+          myLocation == null
+              ? const Center(child: Text("Loading..."))
+              : GoogleMap(
+                  mapType: MapType.normal,
+                  initialCameraPosition: CameraPosition(
+                    target:
+                        LatLng(myLocation!.latitude!, myLocation!.longitude!),
+                    zoom: 19,
+                  ),
+                  onMapCreated: (GoogleMapController controller) {
+                    mapController.complete(controller);
+                  },
+                ),
           //SafeArea()
         ],
       ),
     );
   }
-
 
   StompClient initWebSocketConnection() {
     StompClient client = StompClient(
@@ -87,7 +101,9 @@ class _DeliveryPageState extends State<DeliveryPage> {
     };
     http.post(
       Uri.parse(Urls.websocketDeliverySendURL),
-      headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8'},
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
       body: json.encode(locationObject),
     );
   }
@@ -117,52 +133,13 @@ class _DeliveryPageState extends State<DeliveryPage> {
 
     location.enableBackgroundMode(enable: true);
 
-    locationData = await location.getLocation();
+    myLocation = await location.getLocation();
 
-    location.onLocationChanged.listen((LocationData currentLocation) {
+    location.onLocationChanged.listen((LocationData myChangedLocation) {
+      setState(() {
+        myLocation = myChangedLocation;
+      });
       //onSendToDelivery(currentLocation);
     });
-  }
-
-}
-
-class MapPage extends StatefulWidget {
-  const MapPage({Key? key}) : super(key: key);
-
-  @override
-  State<MapPage> createState() => MapPageState();
-}
-
-class MapPageState extends State<MapPage> {
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
-
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
-
-  static const CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-      ),
-    );
-  }
-
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 }

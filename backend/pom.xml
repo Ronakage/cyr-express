@@ -6,6 +6,8 @@
 	<modules>
 		<module>user</module>
 		<module>delivery</module>
+        <module>order</module>
+		<module>shop</module>
 	</modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -35,6 +37,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>
 	</dependencies>
 	<build>

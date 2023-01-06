@@ -18,6 +18,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    @PreAuthorize("hasAuthority('ROLE_STAFF')")
     @PostMapping("/signup")
     public ResponseEntity<String> signupUser(@RequestBody UserRegistrationRequest request) {
         try {
@@ -56,7 +57,6 @@ public class UserController {
     public List<UserModel> getUserByFirstName(@PathVariable String firstName){
         return userService.getUserByFirstName(firstName);
     }
-
 
     @PreAuthorize("hasAuthority('ROLE_STAFF')")
     @GetMapping("/lastName/{lastName}")

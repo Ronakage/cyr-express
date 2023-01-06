@@ -15,6 +15,7 @@ class CyrExpressApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Cyr Express',
+      debugShowCheckedModeBanner: false,
       home: AuthentactionPage(title: 'Cyr Express'),
     );
   }
