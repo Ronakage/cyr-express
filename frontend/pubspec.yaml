@@ -40,7 +40,8 @@ dependencies:
   animated_text_kit: ^4.2.2 #For text animations
   stomp_dart_client: ^0.4.4 #For websocket and stomp protocol
   location: ^4.4.0 #For location tracking
-  http: ^0.13.5
+  http: ^0.13.5 #For http requests
+  google_maps_flutter: ^2.2.3 #For google maps and apis
 
 dev_dependencies:
   flutter_test:

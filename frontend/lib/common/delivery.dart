@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
@@ -19,14 +21,18 @@ class DeliveryPage extends StatefulWidget {
 class _DeliveryPageState extends State<DeliveryPage> {
   StompClient? client;
 
-  List<String> items = <String>[];
-  String msg = "No items";
-
   @override
   void initState() {
     super.initState();
     client = initWebSocketConnection();
     initLocationTracking();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    client?.deactivate();
   }
 
   @override
@@ -38,22 +44,15 @@ class _DeliveryPageState extends State<DeliveryPage> {
     3 - fix type conversion errors
     */
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: items.isNotEmpty
-              ? ListView.builder(
-                  itemCount: items.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(items[index]),
-                    );
-                  },
-                )
-              : Text(msg),
-        ),
+      body: Stack(
+        children: const [
+          MapPage(),
+          //SafeArea()
+        ],
       ),
     );
   }
+
 
   StompClient initWebSocketConnection() {
     StompClient client = StompClient(
@@ -75,9 +74,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
         headers: {},
         callback: (frame) {
           setState(() {
-            String locationObject = json.encode(frame.body!);
-            items.add(locationObject);
-            print(locationObject);
+            print(frame.body!);
           });
         });
   }
@@ -123,7 +120,49 @@ class _DeliveryPageState extends State<DeliveryPage> {
     locationData = await location.getLocation();
 
     location.onLocationChanged.listen((LocationData currentLocation) {
-      onSendToDelivery(currentLocation);
+      //onSendToDelivery(currentLocation);
     });
+  }
+
+}
+
+class MapPage extends StatefulWidget {
+  const MapPage({Key? key}) : super(key: key);
+
+  @override
+  State<MapPage> createState() => MapPageState();
+}
+
+class MapPageState extends State<MapPage> {
+  final Completer<GoogleMapController> _controller =
+      Completer<GoogleMapController>();
+
+  static const CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(37.42796133580664, -122.085749655962),
+    zoom: 14.4746,
+  );
+
+  static const CameraPosition _kLake = CameraPosition(
+      bearing: 192.8334901395799,
+      target: LatLng(37.43296265331129, -122.08832357078792),
+      tilt: 59.440717697143555,
+      zoom: 19.151926040649414);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: GoogleMap(
+        mapType: MapType.normal,
+        initialCameraPosition: _kGooglePlex,
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+        },
+      ),
+    );
+  }
+
+  Future<void> _goToTheLake() async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 }
