@@ -26,7 +26,7 @@ public class OrderModel {
     private String clientPhoneNumber;
     private String clientEmail;
 
-    private List<BuyableItemModel> orderItems;
+    private List<String> orderItemsIDS;
 
     private LocalDateTime timeCreated;
     private LocalDateTime timeReadyForDelivery;
@@ -40,5 +40,5 @@ public class OrderModel {
     private Boolean isDroppedByDriver;
     private Boolean isPickedByClient;
 
-    private ComplaintModel complaint;
+    private String complaintID;
 }

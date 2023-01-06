@@ -35,19 +35,17 @@ public class UserModel implements UserDetails {
     @NonNull
     @JsonIgnore
     private String password;
-
     @NonNull
     private String roles;
-    private String address;
-    private String shopName;
+
+    private List<String> orderIDS;
+    private List<String> complaintIDS;
+
+    private String shopID;
 
     private LocalDateTime timeCreated;
     private LocalDateTime timeModified;
     private LocalDateTime timeDeleted;
-
-    private List<String> orders;
-    private List<String> reports;
-    private List<String> files;
 
     private LocalDateTime restrictionStartDate;
     private LocalDateTime restrictionEndDate;
