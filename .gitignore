@@ -47,7 +47,3 @@ backend/.idea/
 .idea/modules.xml
 .idea/vcs.xml
 frontend/lib/api/urls.dart
-frontend/android/app/src/debug/AndroidManifest.xml
-frontend/android/app/src/main/AndroidManifest.xml
-frontend/android/app/src/profile/AndroidManifest.xml
-frontend/ios/Runner/AppDelegate.swift

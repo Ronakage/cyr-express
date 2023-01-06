@@ -4,12 +4,10 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:frontend/api/urls.dart';
-import 'package:frontend/common/map.dart';
 import 'package:location/location.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
-
 
 class DeliveryPage extends StatefulWidget {
   DeliveryPage({Key? key}) : super(key: key);
@@ -32,12 +30,6 @@ class _DeliveryPageState extends State<DeliveryPage> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    client?.deactivate();
-  }
-
-  @override
   Widget build(BuildContext context) {
     /*
     TODO :
@@ -45,9 +37,20 @@ class _DeliveryPageState extends State<DeliveryPage> {
     2 - use hashmaps to track people
     3 - fix type conversion errors
     */
-    return const Scaffold(
+    return Scaffold(
       body: SafeArea(
-        child: Map()
+        child: Center(
+          child: items.isNotEmpty
+              ? ListView.builder(
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(items[index]),
+                    );
+                  },
+                )
+              : Text(msg),
+        ),
       ),
     );
   }
@@ -58,6 +61,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
         url: Urls.websocketDeliveryConnectionURL,
         onConnect: onConnectToDelivery,
         onWebSocketError: (error) => print(error.toString()),
+        //Display error
         onStompError: (error) => print(error.toString()),
       ),
     );
@@ -71,7 +75,9 @@ class _DeliveryPageState extends State<DeliveryPage> {
         headers: {},
         callback: (frame) {
           setState(() {
-            print(frame.body!);
+            String locationObject = json.encode(frame.body!);
+            items.add(locationObject);
+            print(locationObject);
           });
         });
   }
@@ -84,9 +90,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
     };
     http.post(
       Uri.parse(Urls.websocketDeliverySendURL),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8'
-      },
+      headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8'},
       body: json.encode(locationObject),
     );
   }
@@ -119,7 +123,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
     locationData = await location.getLocation();
 
     location.onLocationChanged.listen((LocationData currentLocation) {
-      //onSendToDelivery(currentLocation);
+      onSendToDelivery(currentLocation);
     });
   }
 }
