@@ -47,3 +47,29 @@ backend/.idea/
 .idea/modules.xml
 .idea/vcs.xml
 frontend/lib/api/urls.dart
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+frontend/.dart_tool/
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
+frontend/.packages
+frontend/.pub-cache/
+frontend/.pub/
+frontend/build/
+
+# Symbolication related
+frontend/app.*.symbols
+
+# Obfuscation related
+frontend/app.*.map.json
+
+# Android Studio will place build artifacts here
+frontend/android/app/debug
+frontend/android/app/profile
+frontend/android/app/release
+frontend/ios/Runner/AppDelegate.swift
+frontend/android/app/src/profile/AndroidManifest.xml
+frontend/android/app/src/debug/AndroidManifest.xml
+frontend/android/app/src/main/AndroidManifest.xml

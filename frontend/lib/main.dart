@@ -1,6 +1,6 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/api/delivery.dart';
+import 'package:frontend/common/delivery.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'utils/CustomColors.dart';
 
