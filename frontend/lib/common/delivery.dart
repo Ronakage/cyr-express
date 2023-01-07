@@ -20,22 +20,27 @@ class DeliveryPage extends StatefulWidget {
 
 class _DeliveryPageState extends State<DeliveryPage> {
   StompClient? client;
+
+  Location location = Location();
   LocationData? myLocation;
+
   final Completer<GoogleMapController> mapController =
       Completer<GoogleMapController>();
 
+  bool isFollowingAround = true;
+
   @override
   void initState() {
-    super.initState();
     client = initWebSocketConnection();
-    initLocationTracking();
+    askForLocationPermessions();
+    super.initState();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    super.dispose();
     client?.deactivate();
+    super.dispose();
   }
 
   @override
@@ -56,11 +61,29 @@ class _DeliveryPageState extends State<DeliveryPage> {
                   initialCameraPosition: CameraPosition(
                     target:
                         LatLng(myLocation!.latitude!, myLocation!.longitude!),
-                    zoom: 19,
+                    zoom: 17,
                   ),
                   onMapCreated: (GoogleMapController controller) {
                     mapController.complete(controller);
+                    getCurrentLocation();
                   },
+                  markers: {
+                    Marker(
+                        markerId: MarkerId("myLocation"),
+                        position: LatLng(
+                            myLocation!.latitude!, myLocation!.longitude!))
+                  },
+                  onCameraMoveStarted: () => {
+                    if (isFollowingAround == true) isFollowingAround = false
+                  },
+                  onCameraIdle: () async => {
+                    await Future.delayed(const Duration(seconds: 20), () {
+                      if (isFollowingAround == false) {
+                        isFollowingAround = true;
+                      }
+                    }),
+                  },
+                  myLocationButtonEnabled: false,
                 ),
           //SafeArea()
         ],
@@ -108,12 +131,9 @@ class _DeliveryPageState extends State<DeliveryPage> {
     );
   }
 
-  void initLocationTracking() async {
-    Location location = Location();
-
+  void askForLocationPermessions() async {
     bool serviceEnabled;
     PermissionStatus permissionGranted;
-    LocationData locationData;
 
     serviceEnabled = await location.serviceEnabled();
     if (!serviceEnabled) {
@@ -133,11 +153,25 @@ class _DeliveryPageState extends State<DeliveryPage> {
 
     location.enableBackgroundMode(enable: true);
 
-    myLocation = await location.getLocation();
+    location.getLocation().then((initLocation) {
+      setState(() {
+        myLocation = initLocation;
+      });
+    });
+  }
 
+  void getCurrentLocation() async {
+    GoogleMapController initLocationMapController = await mapController.future;
     location.onLocationChanged.listen((LocationData myChangedLocation) {
       setState(() {
         myLocation = myChangedLocation;
+        if (isFollowingAround) {
+          initLocationMapController.animateCamera(
+              CameraUpdate.newCameraPosition(CameraPosition(
+                  zoom: 17,
+                  target:
+                      LatLng(myLocation!.latitude!, myLocation!.longitude!))));
+        }
       });
       //onSendToDelivery(currentLocation);
     });
