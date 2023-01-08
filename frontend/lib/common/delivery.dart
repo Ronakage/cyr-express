@@ -56,36 +56,23 @@ class _DeliveryPageState extends State<DeliveryPage> {
         children: [
           myLocation == null
               ? const Center(child: Text("Loading..."))
-              : GoogleMap(
-                  mapType: MapType.normal,
-                  initialCameraPosition: CameraPosition(
-                    target:
-                        LatLng(myLocation!.latitude!, myLocation!.longitude!),
-                    zoom: 17,
-                  ),
-                  onMapCreated: (GoogleMapController controller) {
-                    mapController.complete(controller);
-                    getCurrentLocation();
-                  },
-                  markers: {
-                    Marker(
-                        markerId: MarkerId("myLocation"),
-                        position: LatLng(
-                            myLocation!.latitude!, myLocation!.longitude!))
-                  },
-                  onCameraMoveStarted: () => {
-                    if (isFollowingAround == true) isFollowingAround = false
-                  },
-                  onCameraIdle: () async => {
-                    await Future.delayed(const Duration(seconds: 20), () {
-                      if (isFollowingAround == false) {
-                        isFollowingAround = true;
-                      }
-                    }),
-                  },
-                  myLocationButtonEnabled: false,
+              : MapWidget(myLocation: myLocation, mapController: mapController),
+          SafeArea(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: FloatingActionButton(
+                  onPressed: StopFollowingForSeconds,
+                  backgroundColor: isFollowingAround == true ? Colors.blue: Colors.grey,
+                  enableFeedback: true,
+                  child: isFollowingAround == true ? const Icon(Icons.my_location) : const Icon(Icons.map),
                 ),
-          //SafeArea()
+              ),
+            ],
+          ))
         ],
       ),
     );
@@ -157,10 +144,11 @@ class _DeliveryPageState extends State<DeliveryPage> {
       setState(() {
         myLocation = initLocation;
       });
+      followCurrentLocation();
     });
   }
 
-  void getCurrentLocation() async {
+  void followCurrentLocation() async {
     GoogleMapController initLocationMapController = await mapController.future;
     location.onLocationChanged.listen((LocationData myChangedLocation) {
       setState(() {
@@ -175,5 +163,44 @@ class _DeliveryPageState extends State<DeliveryPage> {
       });
       //onSendToDelivery(currentLocation);
     });
+  }
+
+  void StopFollowingForSeconds() async {
+    setState(() {
+      isFollowingAround = !isFollowingAround;
+    });
+  }
+}
+
+class MapWidget extends StatelessWidget {
+  const MapWidget({
+    Key? key,
+    required this.myLocation,
+    required this.mapController,
+  }) : super(key: key);
+
+  final LocationData? myLocation;
+  final Completer<GoogleMapController> mapController;
+
+  @override
+  Widget build(BuildContext context) {
+    return GoogleMap(
+      mapType: MapType.normal,
+      initialCameraPosition: CameraPosition(
+        target: LatLng(myLocation!.latitude!, myLocation!.longitude!),
+        zoom: 17,
+      ),
+      onMapCreated: (GoogleMapController controller) {
+        mapController.complete(controller);
+      },
+      markers: {
+        Marker(
+            markerId: MarkerId("myLocation"),
+            position: LatLng(myLocation!.latitude!, myLocation!.longitude!))
+      },
+      zoomControlsEnabled: false,
+      myLocationButtonEnabled: false,
+      padding: EdgeInsets.symmetric(vertical: 30),
+    );
   }
 }
