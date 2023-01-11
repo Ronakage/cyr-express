@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
+import 'dart:typed_data';
 
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -26,6 +29,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
 
   final Completer<GoogleMapController> mapController =
       Completer<GoogleMapController>();
+  BitmapDescriptor? myMarkerIcon;
 
   bool isFollowingAround = true;
 
@@ -33,6 +37,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
   void initState() {
     client = initWebSocketConnection();
     askForLocationPermessions();
+    createCustomMarkerForCurrentLocation();
     super.initState();
   }
 
@@ -56,22 +61,28 @@ class _DeliveryPageState extends State<DeliveryPage> {
         children: [
           myLocation == null
               ? const Center(child: Text("Loading..."))
-              : MapWidget(myLocation: myLocation, mapController: mapController),
+              : MapWidget(myLocation: myLocation, mapController: mapController, myMarkerIcon: myMarkerIcon),
           SafeArea(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: FloatingActionButton(
-                  onPressed: StopFollowingForSeconds,
-                  backgroundColor: isFollowingAround == true ? Colors.blue: Colors.grey,
-                  enableFeedback: true,
-                  child: isFollowingAround == true ? const Icon(Icons.my_location) : const Icon(Icons.map),
+              child: Align(
+            alignment: Alignment.bottomRight,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: FloatingActionButton(
+                    onPressed: stopFollowingCurrentLocation,
+                    backgroundColor:
+                        isFollowingAround == true ? Colors.blue : Colors.grey,
+                    enableFeedback: true,
+                    child: isFollowingAround == true
+                        ? const Icon(Icons.my_location)
+                        : const Icon(Icons.map),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ))
         ],
       ),
@@ -165,22 +176,35 @@ class _DeliveryPageState extends State<DeliveryPage> {
     });
   }
 
-  void StopFollowingForSeconds() async {
+  void stopFollowingCurrentLocation() async {
     setState(() {
       isFollowingAround = !isFollowingAround;
+    });
+  }
+
+  void createCustomMarkerForCurrentLocation() async {
+    //Dice Bear API
+    String url = "https://api.dicebear.com/5.x/initials/png?seed=Rony%20Mawad&radius=50&size=85";
+    Uint8List bytes = (await NetworkAssetBundle(Uri.parse(url)).load(url))
+        .buffer
+        .asUint8List();
+    setState(() {
+      myMarkerIcon = BitmapDescriptor.fromBytes(bytes);
     });
   }
 }
 
 class MapWidget extends StatelessWidget {
-  const MapWidget({
-    Key? key,
-    required this.myLocation,
-    required this.mapController,
-  }) : super(key: key);
+  const MapWidget(
+      {Key? key,
+      required this.myLocation,
+      required this.mapController,
+      required this.myMarkerIcon})
+      : super(key: key);
 
   final LocationData? myLocation;
   final Completer<GoogleMapController> mapController;
+  final BitmapDescriptor? myMarkerIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -195,12 +219,14 @@ class MapWidget extends StatelessWidget {
       },
       markers: {
         Marker(
-            markerId: MarkerId("myLocation"),
-            position: LatLng(myLocation!.latitude!, myLocation!.longitude!))
+          markerId: const MarkerId("myLocation"),
+          position: LatLng(myLocation!.latitude!, myLocation!.longitude!),
+          icon: myMarkerIcon ?? BitmapDescriptor.defaultMarker,
+        )
       },
       zoomControlsEnabled: false,
       myLocationButtonEnabled: false,
-      padding: EdgeInsets.symmetric(vertical: 30),
+      padding: const EdgeInsets.symmetric(vertical: 30),
     );
   }
 }
